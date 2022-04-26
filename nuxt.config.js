@@ -28,7 +28,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '~/plugins/vueDraggableResizable.js', mode: 'client' }
+    { src: '~/plugins/vueDraggableResizable.js', mode: 'client' },
+    { src: '~/plugins/persistedState.matchInfo.js', mode: 'client' },
+    { src: '~/plugins/persistedState.wdgSrc.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

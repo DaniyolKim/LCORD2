@@ -47,10 +47,10 @@
           :z="2"
           :resizable="false"
         >
-          <v-flex class='text-h6 text-center font-weight-bold'>
-            {{ matchTitle }}
+          <v-flex class="text-h6 text-center font-weight-bold">
+            {{ matchInfo.title }}
           </v-flex>
-          <v-container class="ma-0">
+          <v-container style="margin-top: -2px; margin-left: 0px; margin-right: 0px; margin-bottom: 0px;">
             <v-row class="ma-0">
               <v-col class="ma-0 pa-0 text-center" cols="5">
                 <v-flex style="margin-top: 3px">
@@ -59,12 +59,12 @@
               </v-col>
               <v-col class="ma-0 pa-0" cols="1">
                 <v-chip color="primary" style="width: 32px; padding-left: 3px; font-size: 30px; font-weight: bolder" label>
-                  {{ leftCount }}
+                  {{ matchInfo.leftCount }}
                 </v-chip>
               </v-col>
               <v-col class="ma-0 pa-0" cols="1">
                 <v-chip color="primary" style="width: 32px; padding-left: 3px; font-size: 30px; font-weight: bolder" label>
-                  {{ rightCount }}
+                  {{ matchInfo.rightCount }}
                 </v-chip>
               </v-col>
               <v-col class="ma-0 pa-0 text-center" cols="5">
@@ -77,8 +77,8 @@
               <v-col class="ma-0 pa-0 text-center" cols="3">
                 {{ getEnglish(selectedMatch.leftPlayer) }}
               </v-col>
-              <v-col cols="3"></v-col>
-              <v-col cols="3"></v-col>
+              <v-col cols="3" />
+              <v-col cols="3" />
               <v-col class="ma-0 pa-0 text-center" cols="3">
                 {{ getEnglish(selectedMatch.rightPlayer) }}
               </v-col>
@@ -99,43 +99,108 @@
           :resizable="false"
           :active="false"
         >
-          <v-flex class="text-h1 font-weight-bold text-center mb-3">
-            {{ matchTitle }}
-          </v-flex>
+          <v-text-field
+            v-model="matchInfo.title"
+            class="centered-input text-title"
+            label="경기 타이틀 입력"
+            single-line
+            hide-details
+            flat
+            solo
+            @change="updateMatchInfo"
+          />
           <v-simple-table style="opacity: 80%" class="gold-border">
             <template #default>
               <thead>
                 <tr class="text-xl-h2">
-                  <th class="text-center" style="color: red">
-                    1팀
+                  <th>
+                    <v-text-field
+                      v-model="matchInfo.leftTeamName"
+                      class="text-red centered-input text-td"
+                      label="HOME팀 이름"
+                      single-line
+                      hide-details
+                      flat
+                      solo
+                      @change="updateMatchInfo"
+                    />
                   </th>
                   <th colspan="4" class="text-center" style="color: darkgoldenrod">
-                    TONIGHT'S MATCH-UP
+                    MATCH-UP
                   </th>
                   <th class="text-center" style="color: dodgerblue">
-                    2팀
+                    <v-text-field
+                      v-model="matchInfo.rightTeamName"
+                      class="text-blue centered-input text-td"
+                      label="AWAY팀 이름"
+                      single-line
+                      hide-details
+                      flat
+                      solo
+                      @change="updateMatchInfo"
+                    />
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(match, index) in matchList" :key="index" class="text-center text-xl-h1">
+                <tr v-for="(match, index) in matchInfo.matchList" :key="index" class="text-center text-xl-h1">
                   <td>
-                    {{ match.leftPlayer }}
+                    <v-text-field
+                      v-model="match.leftPlayer"
+                      class="centered-input text-td"
+                      label="PLAYER"
+                      single-line
+                      hide-details
+                      flat
+                      solo
+                      @change="updateMatchInfo"
+                    />
                   </td>
                   <td class="bg-trans" style="min-width: 60px" @click="setWinner(match, 'LEFT')">
                     {{ checkWinner('LEFT', match.winner) }}
                   </td>
                   <td class="text-right">
-                    {{ index+1 }}세트({{ match.tier }})
+                    <v-edit-dialog
+                      :return-value-sync="match.tier"
+                    >
+                      {{ index+1 }}세트({{ match.tier }})
+                      <template #input>
+                        <v-text-field
+                          v-model="match.tier"
+                          label="TIER/2:2/3:3"
+                          single-line
+                          clearable
+                          @change="updateMatchInfo"
+                        />
+                      </template>
+                    </v-edit-dialog>
                   </td>
                   <td>
-                    {{ match.map }}
+                    <v-text-field
+                      v-model="match.map"
+                      class="centered-input text-map text-td"
+                      label="맵 이름"
+                      single-line
+                      hide-details
+                      flat
+                      solo
+                      @change="updateMatchInfo"
+                    />
                   </td>
                   <td class="bg-trans" style="min-width: 60px" @click="setWinner(match, 'RIGHT')">
                     {{ checkWinner('RIGHT', match.winner) }}
                   </td>
                   <td>
-                    {{ match.rightPlayer }}
+                    <v-text-field
+                      v-model="match.rightPlayer"
+                      class="centered-input text-td"
+                      label="PLAYER"
+                      single-line
+                      hide-details
+                      flat
+                      solo
+                      @change="updateMatchInfo"
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -144,7 +209,7 @@
         </vue-draggable-resizable>
         <!--채팅 위젯-->
         <vue-draggable-resizable
-          v-show="showChat"
+          v-if="showChat"
           class="none-style"
           :parent="true"
           :z="3"
@@ -157,12 +222,12 @@
             :src="chatSrc"
             width="100%"
             height="100%"
-            style="padding: 10px 0px 10px 10px"
+            style="padding: 10px 0px 10px 10px; border: none"
           />
         </vue-draggable-resizable>
         <!--알림 위젯-->
         <vue-draggable-resizable
-          v-show="showNoti"
+          v-if="showNoti"
           class="none-style"
           :parent="true"
           :z="3"
@@ -175,10 +240,11 @@
             :src="notiSrc"
             width="100%"
             height="100%"
-            style="padding: 10px 10px 10px 10px"
+            style="padding: 10px 10px 10px 10px; border: none"
           />
         </vue-draggable-resizable>
       </v-col>
+      <!--설정-->
       <v-col cols="2">
         <v-card>
           <v-card-actions>
@@ -252,6 +318,7 @@
                 outlined
                 rows="2"
                 hide-details
+                @change="updateChatSrc"
               />
               <v-checkbox v-model="showNoti" label="전자비서 - 알림" hide-details />
               <v-textarea
@@ -262,6 +329,7 @@
                 outlined
                 rows="2"
                 hide-details
+                @change="updateNotiSrc"
               />
             </div>
           </v-expand-transition>
@@ -272,6 +340,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'IndexPage',
   data () {
@@ -288,24 +357,11 @@ export default {
       showScoreMini: false,
       showChat: false,
       showNoti: false,
-      chatSrc: 'https://aqua.afreecatv.com/component.php?szKey=.A32.7bbT56vyHM9fKZk.BjX963Nv1pTSfCuUw3eGwJ_dxhI9abfgfG6Mwt5a5xClg0YAX52omHs8sJj920Jwuv-YX0BNxTwnEhS2vfcgUWpQ3N5OJHyjC1Llen_qiQY',
-      notiSrc: 'https://aqua.afreecatv.com/component.php?szKey=.A32.7bbT56vyHM9fKZk.BjX963Nv1pTSfCuUw3eGwJ_dxhI9abfgfG6Mwt5a5xDEyChIGDIBdvLGtbFJky-HrW3EWQjIJQhfcvxj6WsisztXPPCJTia6zX50FG8mibw',
-      matchTitle: '멸망전 시즌5 준PO 2차전',
-      matchList: [
-        { tier: 'ANI', leftPlayer: '전은후P', map: '굳나잇', rightPlayer: '김태훈P', winner: '' },
-        { tier: 'HUM', leftPlayer: '변진황P', map: '이클립스', rightPlayer: '', winner: '' },
-        { tier: '2:2', leftPlayer: '이대연Z 양현철P', map: '헌터', rightPlayer: '', winner: '' },
-        { tier: 'AMO', leftPlayer: '박아별T', map: '폴리포이드', rightPlayer: '', winner: '' },
-        { tier: 'GOD', leftPlayer: '문명훈P', map: '라르고', rightPlayer: '', winner: '' },
-        { tier: '3:3', leftPlayer: '진영P 경호T 태욱Z', map: '빠른무한', rightPlayer: '태훈P 태훈P 태훈P', winner: '' },
-        { tier: 'GOD', leftPlayer: 'TBD', map: '어센션', rightPlayer: 'TBD', winner: '' }
-      ],
-      showExpandMatchType: true,
-      showExpandLayoutType: true,
-      showExpandWidgets: true,
-      selIndex: 0,
-      leftCount: 0,
-      rightCount: 0
+      // chatSrc: 'http://afreehp.kr/page/U5mWlq6Vx8jUlqaAkQ',
+      // notiSrc: 'http://afreehp.kr/page/U5mWlq6Vx8bYmqSVwJY',
+      showExpandMatchType: false,
+      showExpandLayoutType: false,
+      showExpandWidgets: true
     }
   },
   computed: {
@@ -317,12 +373,20 @@ export default {
       }
     },
     selectedMatch () {
-      if (this.selIndex < this.matchList.length) {
-        return this.matchList[this.selIndex]
+      if (this.matchInfo.selIndex < this.matchInfo.matchList.length) {
+        return this.matchInfo.matchList[this.matchInfo.selIndex]
       } else {
         return { leftPlayer: '게임FIN', map: '', rightPlayer: '종료END', winner: '' }
       }
-    }
+    },
+    matchInfo () {
+      return JSON.parse(JSON.stringify(this.matchInfoStore))
+    },
+    ...mapGetters({
+      matchInfoStore: 'matchInfo/getMatchInfo',
+      chatSrc: 'widgetSrc/getChatSrc',
+      notiSrc: 'widgetSrc/getNotiSrc'
+    })
   },
   methods: {
     changePlayStatus () {
@@ -354,29 +418,44 @@ export default {
         match.winner = winner
       }
       let cnt = 0
-      this.leftCount = 0
-      this.rightCount = 0
-      this.matchList.forEach((match) => {
+      this.matchInfo.leftCount = 0
+      this.matchInfo.rightCount = 0
+      this.matchInfo.matchList.forEach((match) => {
         if (match.winner !== '') {
           cnt++
         }
 
         if (match.winner === 'LEFT') {
-          this.leftCount++
+          this.matchInfo.leftCount++
         }
 
         if (match.winner === 'RIGHT') {
-          this.rightCount++
+          this.matchInfo.rightCount++
         }
       })
-      this.selIndex = cnt
+      this.matchInfo.selIndex = cnt
+      this.updateMatchInfo()
     },
     getKorean (players) {
       return players.replace(/[^\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]/gi, ' ')
     },
     getEnglish (players) {
       return players.replace(/[^a-zA-Z0-9]/g, '')
-    }
+    },
+    updateMatchInfo () {
+      this.updateMatchInfoStore(this.matchInfo)
+    },
+    updateChatSrc (value) {
+      this.updateChatSrcStore(value)
+    },
+    updateNotiSrc (value) {
+      this.updateNotiSrcStore(value)
+    },
+    ...mapMutations({
+      updateMatchInfoStore: 'matchInfo/update',
+      updateChatSrcStore: 'widgetSrc/updateChatSrc',
+      updateNotiSrcStore: 'widgetSrc/updateNotiSrc'
+    })
   }
 }
 </script>
@@ -389,4 +468,12 @@ export default {
   .v-data-table__wrapper table tbody td { font-size: 32px !important; font-weight: bolder; }
   .bg-trans { background-color: black; color: white; }
   .bgSbMini { background-image: url("../assets/scoreboard_mini1.png"); background-repeat : no-repeat; background-size : contain; }
+  .text-map { max-width: 200px; }
+  /deep/ .centered-input input { text-align: center; border-style: none; max-height: none !important; }
+  /deep/ .text-title { font-size: 80px; height: 100px; font-weight: bold; }
+  /deep/ .theme--dark.v-text-field--solo > .v-input__control > .v-input__slot { background: none }
+  .text-td { font-size: 28px; }
+  /deep/ .v-input__slot { padding: 0px !important; }
+  /deep/ .text-red input { color: red; background: black; }
+  /deep/ .text-blue input { color: dodgerblue; background: black; }
 </style>
