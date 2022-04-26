@@ -474,6 +474,6 @@ export default {
   /deep/ .theme--dark.v-text-field--solo > .v-input__control > .v-input__slot { background: none }
   .text-td { font-size: 28px; }
   /deep/ .v-input__slot { padding: 0px !important; }
-  /deep/ .text-red input { color: red; background: black; }
-  /deep/ .text-blue input { color: dodgerblue; background: black; }
+  /deep/ .text-red input { color: red !important; background: black; }
+  /deep/ .text-blue input { color: dodgerblue !important; background: black; }
 </style>
