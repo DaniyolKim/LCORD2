@@ -17,7 +17,7 @@
           <video
             width="100%"
             height="100%"
-            src="../static/milky_way.mp4"
+            :src="videoBGPath"
             autoplay
             loop
             muted
@@ -109,7 +109,7 @@
             solo
             @change="updateMatchInfo"
           />
-          <v-simple-table style="opacity: 80%" class="gold-border">
+          <v-simple-table style="opacity: 95%" class="gold-border">
             <template #default>
               <thead>
                 <tr class="text-xl-h2">
@@ -306,7 +306,14 @@
                 hide-details
                 @change="changePlayStatus"
               />
-              <v-checkbox v-model="showBG" label="배경" hide-details />
+              <v-row>
+                <v-col cols="4">
+                  <v-checkbox v-model="showBG" label="배경" hide-details />
+                </v-col>
+                <v-col cols="8">
+                  <v-select v-model="videoBGSrc" :items="bgList" hide-details @change="updateBGSrc" />
+                </v-col>
+              </v-row>
               <v-checkbox v-model="showScoreBig" label="대형 점수판" hide-details />
               <v-checkbox v-model="showScoreMini" label="미니 점수판" hide-details />
               <v-checkbox v-model="showChat" label="전자비서 - 채팅" hide-details />
@@ -347,7 +354,6 @@ export default {
     return {
       minWidth: 1600,
       minHeight: 900,
-      videoBGSrc: '',
       sbMiniSrc: require('@/assets/scoreboard_mini1.png'),
       matchType: 'team',
       layoutType: 'wide',
@@ -357,11 +363,10 @@ export default {
       showScoreMini: false,
       showChat: false,
       showNoti: false,
-      // chatSrc: 'http://afreehp.kr/page/U5mWlq6Vx8jUlqaAkQ',
-      // notiSrc: 'http://afreehp.kr/page/U5mWlq6Vx8bYmqSVwJY',
       showExpandMatchType: false,
       showExpandLayoutType: false,
-      showExpandWidgets: true
+      showExpandWidgets: true,
+      bgList: ['MilkyWay', 'Particles', 'Dots']
     }
   },
   computed: {
@@ -382,10 +387,14 @@ export default {
     matchInfo () {
       return JSON.parse(JSON.stringify(this.matchInfoStore))
     },
+    videoBGPath () {
+      return require('@/static/' + this.videoBGSrc + '.mp4')
+    },
     ...mapGetters({
       matchInfoStore: 'matchInfo/getMatchInfo',
       chatSrc: 'widgetSrc/getChatSrc',
-      notiSrc: 'widgetSrc/getNotiSrc'
+      notiSrc: 'widgetSrc/getNotiSrc',
+      videoBGSrc: 'widgetSrc/getVideoBGSrc'
     })
   },
   methods: {
@@ -451,10 +460,14 @@ export default {
     updateNotiSrc (value) {
       this.updateNotiSrcStore(value)
     },
+    updateBGSrc (value) {
+      this.updateBGSrcStore(value)
+    },
     ...mapMutations({
       updateMatchInfoStore: 'matchInfo/update',
       updateChatSrcStore: 'widgetSrc/updateChatSrc',
-      updateNotiSrcStore: 'widgetSrc/updateNotiSrc'
+      updateNotiSrcStore: 'widgetSrc/updateNotiSrc',
+      updateBGSrcStore: 'widgetSrc/updateBGSrc'
     })
   }
 }
