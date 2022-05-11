@@ -45,6 +45,7 @@
           :x="0"
           :y="548"
           :z="2"
+          :draggable="false"
           :resizable="false"
         >
           <v-flex class="text-h6 text-center font-weight-bold">
@@ -52,28 +53,32 @@
           </v-flex>
           <v-container style="margin-top: -2px; margin-left: 0px; margin-right: 0px; margin-bottom: 0px;">
             <v-row class="ma-0">
-              <v-col class="ma-0 pa-0 text-center" cols="5">
-                <v-flex style="margin-top: 3px">
-                  {{ getKorean(selectedMatch.leftPlayer) }}
-                </v-flex>
+              <v-col>
+                <v-row>
+                  <v-col class="ma-0 pa-0 mt-1 text-center" cols="9">
+                    {{ getKorean(selectedMatch.leftPlayer) }}
+                  </v-col>
+                  <v-col class="ma-0 pa-0 text-right">
+                    <v-chip color="primary" class="pa-0 pl-2 pr-2" style="font-weight: bold; font-size: 30px" label>
+                      {{ matchInfo.leftCount }}
+                    </v-chip>
+                  </v-col>
+                </v-row>
               </v-col>
-              <v-col class="ma-0 pa-0" cols="1">
-                <v-chip color="primary" style="width: 32px; padding-left: 3px; font-size: 30px; font-weight: bolder" label>
-                  {{ matchInfo.leftCount }}
-                </v-chip>
-              </v-col>
-              <v-col class="ma-0 pa-0" cols="1">
-                <v-chip color="primary" style="width: 32px; padding-left: 3px; font-size: 30px; font-weight: bolder" label>
-                  {{ matchInfo.rightCount }}
-                </v-chip>
-              </v-col>
-              <v-col class="ma-0 pa-0 text-center" cols="5">
-                <v-flex style="margin-top: 3px">
-                  {{ getKorean(selectedMatch.rightPlayer) }}
-                </v-flex>
+              <v-col cols="6">
+                <v-row>
+                  <v-col class="ma-0 pa-0 text-left">
+                    <v-chip color="primary" class="pa-0 pl-2 pr-2" style="font-weight: bold; font-size: 30px" label>
+                      {{ matchInfo.rightCount }}
+                    </v-chip>
+                  </v-col>
+                  <v-col class="ma-0 pa-0 mt-1 text-center" cols="9">
+                    {{ getKorean(selectedMatch.rightPlayer) }}
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
-            <v-row class="ma-0">
+            <v-row class="ma-0 mt-1">
               <v-col class="ma-0 pa-0 text-center" cols="3">
                 {{ getEnglish(selectedMatch.leftPlayer) }}
               </v-col>
@@ -209,14 +214,16 @@
         </vue-draggable-resizable>
         <!--채팅 위젯-->
         <vue-draggable-resizable
-          v-if="showChat"
+          v-show="showChat"
           class="none-style"
           :parent="true"
-          :z="3"
-          :x="1304"
-          :y="448"
+          :z="1"
+          :x="270"
+          :y="650"
           :w="300"
-          :h="200"
+          :h="250"
+          :draggable="true"
+          :active="true"
         >
           <iframe
             :src="chatSrc"
@@ -227,14 +234,16 @@
         </vue-draggable-resizable>
         <!--알림 위젯-->
         <vue-draggable-resizable
-          v-if="showNoti"
+          v-show="showNoti"
           class="none-style"
           :parent="true"
-          :z="3"
-          :x="700"
-          :y="700"
-          :w="300"
-          :h="200"
+          :z="1"
+          :x="600"
+          :y="760"
+          :w="220"
+          :h="140"
+          :draggable="true"
+          :active="true"
         >
           <iframe
             :src="notiSrc"
@@ -372,9 +381,9 @@ export default {
   computed: {
     labelIsPlaying () {
       if (this.isPlaying) {
-        return 'On playing'
+        return '게임 진행중'
       } else {
-        return 'Break time'
+        return '게임 대기중'
       }
     },
     selectedMatch () {
