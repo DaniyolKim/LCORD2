@@ -257,44 +257,14 @@
       <v-col cols="2">
         <v-card>
           <v-card-actions>
-            <v-flex>경기 종류 선택</v-flex>
+            <v-flex>입력값 초기화</v-flex>
             <v-spacer />
             <v-btn
-              icon
-              @click="showExpandMatchType = !showExpandMatchType"
+              @click="clearMatchInfo"
             >
-              <v-icon>{{ showExpandMatchType ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              CLEAR?
             </v-btn>
           </v-card-actions>
-          <v-expand-transition>
-            <div v-show="showExpandMatchType" class="pa-3">
-              <v-radio-group v-model="matchType" class="pa-0">
-                <v-radio label="멸망전/팀 경기" value="team" />
-                <v-radio label="개인전" value="personal" />
-                <v-radio label="겟투게더" value="getTogether" />
-              </v-radio-group>
-            </div>
-          </v-expand-transition>
-        </v-card>
-        <v-card class="mt-3">
-          <v-card-actions>
-            <v-flex>레이아웃 선택</v-flex>
-            <v-spacer />
-            <v-btn
-              icon
-              @click="showExpandLayoutType = !showExpandLayoutType"
-            >
-              <v-icon>{{ showExpandLayoutType ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-          <v-expand-transition>
-            <div v-show="showExpandLayoutType" class="pa-3">
-              <v-radio-group v-model="layoutType" class="pa-0" row>
-                <v-radio label="16:9" value="wide" />
-                <v-radio label="4:3" value="narrow" />
-              </v-radio-group>
-            </div>
-          </v-expand-transition>
         </v-card>
         <v-card class="mt-3">
           <v-card-actions>
@@ -375,7 +345,7 @@ export default {
       showExpandMatchType: false,
       showExpandLayoutType: false,
       showExpandWidgets: true,
-      bgList: ['MilkyWay', 'Particles', 'Dots']
+      bgList: ['MilkyWay', 'Particles', 'Dots', 'Waves', 'Videogame']
     }
   },
   computed: {
@@ -472,7 +442,11 @@ export default {
     updateBGSrc (value) {
       this.updateBGSrcStore(value)
     },
+    clearMatchInfo () {
+      this.initMatchInfoStore()
+    },
     ...mapMutations({
+      initMatchInfoStore: 'matchInfo/init',
       updateMatchInfoStore: 'matchInfo/update',
       updateChatSrcStore: 'widgetSrc/updateChatSrc',
       updateNotiSrcStore: 'widgetSrc/updateNotiSrc',
