@@ -216,46 +216,6 @@
             </template>
           </v-simple-table>
         </vue-draggable-resizable>
-        <!--채팅 위젯-->
-        <vue-draggable-resizable
-          v-show="showChat"
-          class="none-style"
-          :parent="true"
-          :z="1"
-          :x="270"
-          :y="650"
-          :w="300"
-          :h="250"
-          :draggable="true"
-          :active="true"
-        >
-          <iframe
-            :src="chatSrc"
-            width="100%"
-            height="100%"
-            style="padding: 10px 0px 10px 10px; border: none"
-          />
-        </vue-draggable-resizable>
-        <!--알림 위젯-->
-        <vue-draggable-resizable
-          v-show="showNoti"
-          class="none-style"
-          :parent="true"
-          :z="1"
-          :x="600"
-          :y="760"
-          :w="220"
-          :h="140"
-          :draggable="true"
-          :active="true"
-        >
-          <iframe
-            :src="notiSrc"
-            width="100%"
-            height="100%"
-            style="padding: 10px 10px 10px 10px; border: none"
-          />
-        </vue-draggable-resizable>
       </v-col>
       <!--설정-->
       <v-col cols="2">
@@ -299,7 +259,7 @@
               </v-row>
               <v-checkbox v-model="showScoreBig" label="대형 점수판" hide-details />
               <v-checkbox v-model="showScoreMini" label="미니 점수판" hide-details />
-              <v-checkbox v-model="showChat" label="전자비서 - 채팅" hide-details />
+              <!--<v-checkbox v-model="showChat" label="전자비서 - 채팅" hide-details />
               <v-textarea
                 v-show="showChat"
                 v-model="chatSrc"
@@ -320,7 +280,7 @@
                 rows="2"
                 hide-details
                 @change="updateNotiSrc"
-              />
+              />-->
             </div>
           </v-expand-transition>
         </v-card>
@@ -436,7 +396,11 @@ export default {
     },
     getSplited (players, index) {
       const strings = players.split(' ')
-      return strings[index]
+      if (index === 0) {
+        return strings[index]
+      } else {
+        return strings[index].replace(/[()]/g, '')
+      }
     },
     updateMatchInfo () {
       this.updateMatchInfoStore(this.matchInfo)
@@ -456,8 +420,6 @@ export default {
     ...mapMutations({
       initMatchInfoStore: 'matchInfo/init',
       updateMatchInfoStore: 'matchInfo/update',
-      updateChatSrcStore: 'widgetSrc/updateChatSrc',
-      updateNotiSrcStore: 'widgetSrc/updateNotiSrc',
       updateBGSrcStore: 'widgetSrc/updateBGSrc'
     })
   }
