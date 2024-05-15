@@ -56,7 +56,8 @@
               <v-col>
                 <v-row>
                   <v-col class="ma-0 pa-0 mt-1 text-center font-weight-bold" cols="9">
-                    {{ getKorean(selectedMatch.leftPlayer) }}
+                    <!--{{ getKorean(selectedMatch.leftPlayer) }}-->
+                    {{ getSplited(selectedMatch.leftPlayer, 0) }}
                   </v-col>
                   <v-col class="ma-0 pa-0 text-right">
                     <v-chip color="primary" class="pa-0 pl-2 pr-2" style="font-weight: bold; font-size: 30px;" label>
@@ -73,19 +74,22 @@
                     </v-chip>
                   </v-col>
                   <v-col class="ma-0 pa-0 mt-1 text-center font-weight-bold" cols="9">
-                    {{ getKorean(selectedMatch.rightPlayer) }}
+                    <!--{{ getKorean(selectedMatch.rightPlayer) }}-->
+                    {{ getSplited(selectedMatch.rightPlayer, 0) }}
                   </v-col>
                 </v-row>
               </v-col>
             </v-row>
             <v-row class="ma-0 mt-1">
               <v-col class="ma-0 pa-0 text-center font-weight-bold" style="color: #ff2235;" cols="3">
-                {{ getEnglish(selectedMatch.leftPlayer) }}
+                <!--{{ getEnglish(selectedMatch.leftPlayer) }}-->
+                {{ getSplited(selectedMatch.leftPlayer, 1) }}
               </v-col>
               <v-col cols="3" />
               <v-col cols="3" />
               <v-col class="ma-0 pa-0 text-center font-weight-bold" style="color: #2a98ff;" cols="3">
-                {{ getEnglish(selectedMatch.rightPlayer) }}
+                <!--{{ getEnglish(selectedMatch.rightPlayer) }}-->
+                {{ getSplited(selectedMatch.rightPlayer, 1) }}
               </v-col>
             </v-row>
           </v-container>
@@ -429,6 +433,10 @@ export default {
     },
     getEnglish (players) {
       return players.replace(/[^a-zA-Z0-9]/g, '')
+    },
+    getSplited (players, index) {
+      const strings = players.split(' ')
+      return strings[index]
     },
     updateMatchInfo () {
       this.updateMatchInfoStore(this.matchInfo)
