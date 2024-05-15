@@ -396,11 +396,13 @@ export default {
     },
     getSplited (players, index) {
       const strings = players.split(' ')
-      if (index === 0) {
-        return strings[index]
-      } else {
-        return strings[index].replace(/[()]/g, '')
+      let retString = strings[index]
+      if (index >= 1) {
+        if (retString !== undefined) {
+          return retString.replace(/[^a-zA-Z0-9]/g, '')
+        }
       }
+      return retString
     },
     updateMatchInfo () {
       this.updateMatchInfoStore(this.matchInfo)
