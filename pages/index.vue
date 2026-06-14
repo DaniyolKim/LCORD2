@@ -25,12 +25,13 @@
         </vue-draggable-resizable>
         <!--엘크 로고-->
         <vue-draggable-resizable
+          v-show="!showScoreMini"
           class="none-style"
           :parent="true"
           :w="20"
           :x="5"
           :y="5"
-          :z="2"
+          :z="3"
           :draggable="false"
           :resizable="false"
         >
@@ -38,6 +39,90 @@
         </vue-draggable-resizable>
         <!--미니 점수판-->
         <vue-draggable-resizable
+          v-show="showScoreMini"
+          class="none-style bgSbMiddle"
+          :parent="true"
+          :w="450"
+          :x="0"
+          :y="7"
+          :z="2"
+          :draggable="false"
+          :resizable="false"
+        >
+          <v-container>
+            <v-row>
+              <v-col class="pb-1" cols="12">
+                <v-flex class="text-h6 text-center font-weight-bold">
+                  {{ matchInfo.title }} - {{ selectedMatch.map }}({{ selectedMatch.tier }})
+                </v-flex>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="5" class="pt-0 pl-0">
+                <v-flex class="text-center font-weight-bold">{{ selectedMatch.leftPlayer }}</v-flex>
+                <v-flex class="d-flex justify-center align-center px-2">
+                  <v-flex
+                    v-for="(match, index) in matchInfo.matchList"
+                    :key="index"
+                    :class="[
+                      'rounded',
+                      match.winner === '' ? 'grey darken-1' :
+                      match.winner === 'LEFT' ? 'blue lighten-1' : 'red lighten-1'
+                    ]"
+                    style="height: 15px; width: 5px; margin: 3px;"
+                  />
+                </v-flex>
+              </v-col>
+              <v-col cols="2" class="d-flex justify-center font-weight-bold align-center pa-0 text-h3 text-center" style="background-color: #1867C0; margin-left: -15px; border-radius: 10%; height: 45px;">
+                {{ matchInfo.leftCount }}:{{ matchInfo.rightCount }}
+              </v-col>
+              <v-col cols="5" class="pt-0 pl-0">
+                <v-flex class="text-center font-weight-bold">{{ selectedMatch.rightPlayer }}</v-flex>
+                <v-flex class="d-flex justify-center align-center px-2">
+                  <v-flex
+                    v-for="(match, index) in matchInfo.matchList"
+                    :key="index"
+                    :class="[
+                      'rounded',
+                      match.winner === '' ? 'grey darken-1' :
+                      match.winner === 'RIGHT' ? 'blue lighten-1' : 'red lighten-1'
+                    ]"
+                    style="height: 15px; width: 5px; margin: 3px;"
+                  />
+                </v-flex>
+              </v-col>
+            </v-row>
+          </v-container>
+          <!-- <v-container style="margin-top: -2px; margin-left: 0px; margin-right: 0px; margin-bottom: 0px;">
+            <v-row class="ma-0">
+              <v-col>
+                <v-row>
+                  <v-col class="ma-0 pa-0 mt-1 text-center font-weight-bold" cols="9">
+                    {{ selectedMatch.leftPlayer }}
+                  </v-col>
+                  <v-col class="ma-0 pa-0 text-right">
+                    <v-chip color="primary" class="pa-0 pl-2 pr-2" style="font-weight: bold; font-size: 30px;" label>
+                      {{ matchInfo.leftCount }}
+                    </v-chip>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="6">
+                <v-row>
+                  <v-col class="ma-0 pa-0 text-left">
+                    <v-chip color="primary" class="pa-0 pl-2 pr-2" style="font-weight: bold; font-size: 30px" label>
+                      {{ matchInfo.rightCount }}
+                    </v-chip>
+                  </v-col>
+                  <v-col class="ma-0 pa-0 mt-1 text-center font-weight-bold" cols="9">
+                    {{ selectedMatch.rightPlayer }}
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-container> -->
+        </vue-draggable-resizable>
+        <!-- <vue-draggable-resizable
           v-show="showScoreMini"
           class="none-style bgSbMini"
           :parent="true"
@@ -56,7 +141,6 @@
               <v-col>
                 <v-row>
                   <v-col class="ma-0 pa-0 mt-1 text-center font-weight-bold" cols="9">
-                    <!--{{ getKorean(selectedMatch.leftPlayer) }}-->
                     {{ getSplited(selectedMatch.leftPlayer, 0) }}
                   </v-col>
                   <v-col class="ma-0 pa-0 text-right">
@@ -74,7 +158,6 @@
                     </v-chip>
                   </v-col>
                   <v-col class="ma-0 pa-0 mt-1 text-center font-weight-bold" cols="9">
-                    <!--{{ getKorean(selectedMatch.rightPlayer) }}-->
                     {{ getSplited(selectedMatch.rightPlayer, 0) }}
                   </v-col>
                 </v-row>
@@ -82,18 +165,16 @@
             </v-row>
             <v-row class="ma-0 mt-1">
               <v-col class="ma-0 pa-0 text-center font-weight-bold" style="color: #ff2235;" cols="3">
-                <!--{{ getEnglish(selectedMatch.leftPlayer) }}-->
                 {{ getSplited(selectedMatch.leftPlayer, 1) }}
               </v-col>
               <v-col cols="3" />
               <v-col cols="3" />
               <v-col class="ma-0 pa-0 text-center font-weight-bold" style="color: #2a98ff;" cols="3">
-                <!--{{ getEnglish(selectedMatch.rightPlayer) }}-->
                 {{ getSplited(selectedMatch.rightPlayer, 1) }}
               </v-col>
             </v-row>
           </v-container>
-        </vue-draggable-resizable>
+        </vue-draggable-resizable> -->
         <!--대형 점수판-->
         <vue-draggable-resizable
           v-show="showScoreBig"
@@ -396,7 +477,7 @@ export default {
     },
     getSplited (players, index) {
       const strings = players.split(' ')
-      let retString = strings[index]
+      const retString = strings[index]
       if (index >= 1) {
         if (retString !== undefined) {
           return retString.replace(/[^a-zA-Z0-9]/g, '')
@@ -436,6 +517,7 @@ export default {
   .v-data-table__wrapper table tbody td { font-size: 32px !important; font-weight: bolder; }
   .bg-trans { background-color: black; color: white; }
   .bgSbMini { background-image: url("../assets/scoreboard_mini1.png"); background-repeat : no-repeat; background-size : contain; }
+  .bgSbMiddle { background-image: url("../assets/scoreboard_middle.png"); background-repeat : no-repeat; background-size : contain; }
   .text-map { max-width: 200px; }
   /deep/ .centered-input input { text-align: center; border-style: none; max-height: none !important; }
   /deep/ .text-title { font-size: 80px; height: 100px; font-weight: bold; }

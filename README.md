@@ -3,6 +3,10 @@
 ## Build Setup
 
 ```bash
+# install npm
+$ nvm install 16.20.2
+$ nvm use 16.20.2
+
 # install dependencies
 $ npm install
 
